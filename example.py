@@ -1,5 +1,4 @@
 from hipmessage import BaseFilter, HipMessage, FileBackend
-import re
 import json
 
 
@@ -20,8 +19,8 @@ class CardHipMessages(HipMessage):
 
     def process_message(self, msg):
         card = json.loads(msg['card'])
-        print 'Description: {} | Link: {}'.format(
-            card['description'].encode('utf8'), card['url'].encode('utf8'))
+        print('Description: {} | Link: {}'.format(
+            card['description'].encode('utf8'), card['url'].encode('utf8')))
 
 
 instance = CardHipMessages(
