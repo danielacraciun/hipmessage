@@ -1,3 +1,4 @@
+from local_settings import token, room_name
 from hipmessage import BaseFilter, HipMessage, FileBackend
 import json
 
@@ -23,6 +24,5 @@ class CardHipMessages(HipMessage):
             card['description'].encode('utf8'), card['url'].encode('utf8')))
 
 
-instance = CardHipMessages(
-    '', 'Tech_stuff')
+instance = CardHipMessages(token, room_name)
 instance.run()

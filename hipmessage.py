@@ -1,6 +1,5 @@
 import os
 import datetime
-import dateutil.tz
 
 from hypchat import HypChat
 
@@ -12,17 +11,17 @@ class BaseFilter(object):
     without_fields = None
 
     def is_valid(self, message):
-        '''
+        """
         This is the method the method that you should override.
         Returns whether or not the given message passes a certain
         set of conditions
-        '''
+        """
         return True
 
     def is_ok(self, message):
-        '''
+        """
         This method returns whether or not the message passed this filter
-        '''
+        """
         return (
             self.has_mandatory_fields(message) and
             self.is_without_fields(message) and
@@ -55,24 +54,24 @@ class BaseFilter(object):
 
 
 class BaseBackend(object):
-    '''
+    """
     Class that exposes two methods, get_last_message_id and
     set_last_message_id.self._room_name,  This ID is used to get the latest messages
     from a room, without getting the ones that were already processed
-    '''
+    """
 
     def get_last_message_id(self):
-        '''
+        """
         This returns the id of the last message that was saved or None
         if no message was saved so far
-        '''
+        """
         raise NotImplementedError(
             "You need to implement this in your derived class")
 
-    def set_last_message_id(self, id):
-        '''
+    def set_last_message_id(self, message_id):
+        """
         Saves the id of the las message that was saved
-        '''
+        """
         raise NotImplementedError(
             "You need to implement this in your derived class")
 
@@ -112,11 +111,11 @@ class FileBackend(BaseBackend):
 
 
 class HipMessage(object):
-    '''
+    """
     Class that gets all messages from a given room, filters them through
     the classes from filter_classes and returns them when get_newest_messages
     is called.
-    '''
+    """
 
     # A class that has implemented two methods
     #   - set_last_message_id(self._room_name, )
@@ -142,7 +141,7 @@ class HipMessage(object):
         if not filtered_rooms:
             raise ValueError('No room with name {}'.format(self._room_name))
 
-        return filtered_rooms[0]['id']
+        return list(filtered_rooms)[0]['id']
 
     def is_message_valid(self, message):
         if self.filter_classes:
@@ -157,7 +156,7 @@ class HipMessage(object):
         while True:
             messages_count = 0
             messages = self._room.history(
-                maxResults=1000, date=date, reverse=False)
+                maxResults=1000, date=date)
             for message in messages['items']:
                 messages_count += 1
                 if self.is_message_valid(message) is False:
@@ -193,10 +192,10 @@ class HipMessage(object):
             self._message_backend.set_last_message_id(last_message['id'])
 
     def process_message(self, msg):
-        '''
+        """
         This is the method you override in your derived class.
         Method that takes as only argument a message and processes it.
-        '''
+        """
 
     def run(self):
         self.get_newest_messages()
