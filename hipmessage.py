@@ -149,14 +149,14 @@ class HipMessage(object):
                 map(lambda cls: cls().is_ok(message), self.filter_classes))
         return True
 
-    def process_complete_history(self):
+    def process_complete_history(self, max_results):
         date = datetime.datetime.utcnow()
         newest_id = None
 
         while True:
             messages_count = 0
             messages = self._room.history(
-                maxResults=1000, date=date)
+                maxResults=max_results, date=date)
             for message in messages['items']:
                 messages_count += 1
                 if self.is_message_valid(message) is False:
@@ -177,7 +177,7 @@ class HipMessage(object):
         if last_message_id is not None:
             params = {'not_before': last_message_id}
         else:
-            newest_id = self.process_complete_history()
+            newest_id = self.process_complete_history(max_results)
             self._message_backend.set_last_message_id(newest_id)
             return
 

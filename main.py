@@ -34,9 +34,8 @@ class PlainMessage(HipMessage):
     filter_classes = (PlainMessageFilter,)
 
     def process_message(self, msg):
-        msg = json.loads(msg['card'])
-        print(msg)
+        print(msg['from']['name'])
 
 
-instance = CardMessage(token, room_name)
+instance = PlainMessage(token, room_name)
 instance.run()
